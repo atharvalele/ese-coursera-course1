@@ -17,3 +17,7 @@
 ### The repository is organized in multiple folders:
 ###      demos -> Materials to help you follow along with videos
 ###      assessments -> Materials used for assessments
+
+Introduction to Embedded Systems Software and Dev by CU Boulder
+
+Assessment Repository
