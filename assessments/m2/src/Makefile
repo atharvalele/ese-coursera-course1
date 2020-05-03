@@ -56,6 +56,7 @@ endif
 endif
 
 OBJS := $(SOURCES:.c=.o)
+DEPS := $(SOURCES:.c=.d)
 
 # Compile all object files
 %.o : %.c
@@ -65,12 +66,15 @@ OBJS := $(SOURCES:.c=.o)
 %.i : %.c
 	$(CC) $(INCLUDES) -c $< $(CFLAGS) $(PLATFORM_FLAGS) -E -o $@
 
+%.d :%.c
+	$(CC) $(INCLUDES) -c $< $(CFLAGS) $(PLATFORM_FLAGS) -MM -o $@
+
 # Compile assembly
 %.asm : %.c
 	$(CC) $(INCLUDES) -c $< $(CFLAGS) $(PLATFORM_FLAGS) -S -o $@
 
-c1m2.out: $(OBJS)
-	$(CC) $(INCLUDES) $(CFLAGS) $(LDFLAGS) $(PLATFORM_FLAGS) -o $@ $(OBJS)
+c1m2.out: $(OBJS) $(DEPS)
+	$(CC) $(INCLUDES) $(CFLAGS) $(LDFLAGS) $(PLATFORM_FLAGS) -o $@ $(OBJS) -MD -Wl,-Map=c1m2.map
 
 c1m2.asm: c1m2.out
 	$(OBJDUMP) -d c1m2.out > c1m2.asm
@@ -84,4 +88,4 @@ build: c1m2.out
 
 .PHONY: clean
 clean:
-	rm -f *.asm *.i *.o c1m2.out
+	rm -f *.asm *.d *.i *.map *.o c1m2.out
